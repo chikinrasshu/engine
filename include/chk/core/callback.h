@@ -1,3 +1,3 @@
 #pragma once
 
-typedef void ChkCallback(void* userData);
+typedef void Callback(void* userData);

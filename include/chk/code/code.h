@@ -4,10 +4,10 @@
 
 #include <chk/core/core.h>
 
-typedef struct ChkCode {
+typedef struct Code {
   void* handle;
-} ChkCode;
+} Code;
 
-CHK_CODE_API b32 chkCodeCreate(ChkCode* code, cstr caption);
-CHK_CODE_API b32 chkCodeDestroy(ChkCode* code);
-CHK_CODE_API b32 chkCodeRefresh(ChkCode* code);
+CODE_API B32 Code_Create(Code* code, CStr caption);
+CODE_API B32 Code_Destroy(Code* code);
+CODE_API B32 Code_Refresh(Code* code);

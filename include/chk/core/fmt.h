@@ -4,5 +4,5 @@
 
 #include <chk/core/types.h>
 
-CHK_CORE_API b32 chkFmt(str buf, size_t size, cstr msg, ...);
-CHK_CORE_API b32 chkFmtV(str buf, size_t size, cstr msg, va_list args);
+CORE_API B32 Fmt(Str buf, Size size, CStr msg, ...);
+CORE_API B32 FmtV(Str buf, Size size, CStr msg, Args args);

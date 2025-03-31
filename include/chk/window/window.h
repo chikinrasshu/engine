@@ -4,23 +4,23 @@
 
 #include <chk/core/core.h>
 
-typedef struct ChkWindow {
-  f32 x, y, w, h;
-  f32 fb_x, fb_y, fb_w, fb_h;
-  f32 dpi_x, dpi_y;
-  f32 dt, ct, lt;
+typedef struct Window {
+  F32 x, y, w, h;
+  F32 fb_x, fb_y, fb_w, fb_h;
+  F32 dpi_x, dpi_y;
+  F32 dt, ct, lt;
 
-  ChkCallback* onFrame;
+  Callback* onFrame;
 
   void* userData;
   void* handle;
-} ChkWindow;
+} Window;
 
-CHK_WINDOW_API b32 chkWindowCreate(ChkWindow* window, s32 w, s32 h, cstr title);
-CHK_WINDOW_API b32 chkWindowDestroy(ChkWindow* window);
+WINDOW_API B32 Window_Create(Window* window, S32 w, S32 h, CStr title);
+WINDOW_API B32 Window_Destroy(Window* window);
 
-CHK_WINDOW_API s32 chkWindowStep(ChkWindow* window, b32 poll_events);
-CHK_WINDOW_API s32 chkWindowRun(ChkWindow* window);
+WINDOW_API S32 Window_Step(Window* window, B32 poll_events);
+WINDOW_API S32 Window_Run(Window* window);
 
-CHK_WINDOW_API b32 chkWindowSetUserData(ChkWindow* window, void* ptr);
-CHK_WINDOW_API b32 chkWindowSetOnFrame(ChkWindow* window, ChkCallback* fn);
+WINDOW_API B32 Window_SetUserData(Window* window, void* ptr);
+WINDOW_API B32 Window_SetOnFrame(Window* window, Callback* fn);

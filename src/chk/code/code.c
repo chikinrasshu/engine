@@ -1,17 +1,17 @@
 #include <chk/code/code.h>
 
 // Stub
-CHK_CODE_API b32 chkCodeCreate(ChkCode* code, cstr caption) {
+CODE_API B32 Code_Create(Code* code, CStr caption) {
   //
   return true;
 }
 
-CHK_CODE_API b32 chkCodeDestroy(ChkCode* code) {
+CODE_API B32 Code_Destroy(Code* code) {
   //
   return true;
 }
 
-CHK_CODE_API b32 chkCodeRefresh(ChkCode* code) {
+CODE_API B32 Code_Refresh(Code* code) {
   //
   return false;
 }

@@ -4,35 +4,35 @@
 
 #include <chk/core/types.h>
 
-typedef enum ChkLogSev {
-  ChkLogSev_Debug,
-  ChkLogSev_Trace,
-  ChkLogSev_Info,
-  ChkLogSev_Warn,
-  ChkLogSev_Error,
-  ChkLogSev_Fatal,
-} ChkLogSev;
+typedef enum LogSev {
+  LogSev_Debug = 1,
+  LogSev_Trace,
+  LogSev_Info,
+  LogSev_Warn,
+  LogSev_Error,
+  LogSev_Fatal,
 
-CHK_CORE_API b32 impl_chkLog(ChkLogSev sev, cstr msg, cstr file, cstr func,
-                             u32 line);
-CHK_CORE_API b32 impl_chkLogF(ChkLogSev sev, cstr msg, cstr file, cstr func,
-                              u32 line, ...);
+  LogSev_Count,
+} LogSev;
 
-#define chkLogDebug(msg, ...)                                                  \
-  impl_chkLog##__VA_OPT__(F)(ChkLogSev_Debug, (msg), __FILE__, __func__,       \
-                             __LINE__ __VA_OPT__(, ) __VA_ARGS__)
-#define chkLogTrace(msg, ...)                                                  \
-  impl_chkLog##__VA_OPT__(F)(ChkLogSev_Trace, (msg), __FILE__, __func__,       \
-                             __LINE__ __VA_OPT__(, ) __VA_ARGS__)
-#define chkLogInfo(msg, ...)                                                   \
-  impl_chkLog##__VA_OPT__(F)(ChkLogSev_Info, (msg), __FILE__, __func__,        \
-                             __LINE__ __VA_OPT__(, ) __VA_ARGS__)
-#define chkLogWarn(msg, ...)                                                   \
-  impl_chkLog##__VA_OPT__(F)(ChkLogSev_Warn, (msg), __FILE__, __func__,        \
-                             __LINE__ __VA_OPT__(, ) __VA_ARGS__)
-#define chkLogError(msg, ...)                                                  \
-  impl_chkLog##__VA_OPT__(F)(ChkLogSev_Error, (msg), __FILE__, __func__,       \
-                             __LINE__ __VA_OPT__(, ) __VA_ARGS__)
-#define chkLogFatal(msg, ...)                                                  \
-  impl_chkLog##__VA_OPT__(F)(ChkLogSev_Fatal, (msg), __FILE__, __func__,       \
-                             __LINE__ __VA_OPT__(, ) __VA_ARGS__)
+CORE_API B32 Impl_Log(LogSev sev, CStr msg, CStr file, CStr fn, U32 line);
+CORE_API B32 Impl_LogF(LogSev sev, CStr msg, CStr file, CStr fn, U32 line, ...);
+
+#define Log_Debug(msg, ...)                                                    \
+  impl_Log##__VA_OPT__(F)(ChkLogSev_Debug, (msg), __FILE__, __func__,          \
+                          __LINE__ __VA_OPT__(, ) __VA_ARGS__)
+#define Log_Trace(msg, ...)                                                    \
+  impl_Log##__VA_OPT__(F)(ChkLogSev_Trace, (msg), __FILE__, __func__,          \
+                          __LINE__ __VA_OPT__(, ) __VA_ARGS__)
+#define Log_Info(msg, ...)                                                     \
+  impl_Log##__VA_OPT__(F)(ChkLogSev_Info, (msg), __FILE__, __func__,           \
+                          __LINE__ __VA_OPT__(, ) __VA_ARGS__)
+#define Log_Warn(msg, ...)                                                     \
+  impl_Log##__VA_OPT__(F)(ChkLogSev_Warn, (msg), __FILE__, __func__,           \
+                          __LINE__ __VA_OPT__(, ) __VA_ARGS__)
+#define Log_Error(msg, ...)                                                    \
+  impl_Log##__VA_OPT__(F)(ChkLogSev_Error, (msg), __FILE__, __func__,          \
+                          __LINE__ __VA_OPT__(, ) __VA_ARGS__)
+#define Log_Fatal(msg, ...)                                                    \
+  impl_Log##__VA_OPT__(F)(ChkLogSev_Fatal, (msg), __FILE__, __func__,          \
+                          __LINE__ __VA_OPT__(, ) __VA_ARGS__)

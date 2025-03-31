@@ -4,17 +4,47 @@
 
 #include <chk/core/core.h>
 
-// #include <chk/draw/cmd.h>
+typedef enum DrawCmdKind {
+  DrawCmdKind_Viewport = 1,
+  DrawCmdKind_Clear,
+  DrawCmdKind_Rect,
 
-typedef struct ChkDraw {
-  s32 _unused;
-} ChkDraw;
+  DrawCmdKind_Count,
+} DrawCmdKind;
 
-CHK_DRAW_API b32 chkDrawCreate(ChkDraw* draw);
-CHK_DRAW_API b32 chkDrawDestroy(ChkDraw* draw);
+typedef struct DrawCmd_Viewport {
+  DrawCmdKind kind;
 
-CHK_DRAW_API b32 chkDrawBeginFrame(ChkDraw* draw);
-CHK_DRAW_API b32 chkDrawEndFrame(ChkDraw* draw);
+  F32 x, y, w, h;
+} DrawCmd_Viewport;
 
-CHK_DRAW_API b32 chkDrawViewport(ChkDraw* draw, f32 x, f32 y, f32 w, f32 h);
-CHK_DRAW_API b32 chkDrawClear(ChkDraw* draw, f32 r, f32 g, f32 b);
+typedef struct DrawCmd_Clear {
+  DrawCmdKind kind;
+
+  F32 r, g, b;
+} DrawCmd_Clear;
+
+typedef struct DrawCmd_Rect {
+  DrawCmdKind kind;
+
+  F32 r, g, b;
+  F32 x, y, w, h;
+} DrawCmd_Rect;
+
+typedef struct Draw {
+  S32 _unused;
+} Draw;
+
+DRAW_API B32 Draw_Create(Draw* draw);
+DRAW_API B32 Draw_Destroy(Draw* draw);
+
+DRAW_API B32 Draw_BeginFrame(Draw* draw);
+DRAW_API B32 Draw_EndFrame(Draw* draw);
+
+DRAW_API B32 Draw_PushViewport(Draw* draw, DrawCmd_Viewport cmd);
+DRAW_API B32 Draw_PushClear(Draw* draw, DrawCmd_Clear cmd);
+DRAW_API B32 Draw_PushRect(Draw* draw, DrawCmd_Rect cmd);
+
+DRAW_API void Draw_Apply_Viewport(Draw* draw, DrawCmd_Viewport* cmd);
+DRAW_API void Draw_Apply_Clear(Draw* draw, DrawCmd_Clear* cmd);
+DRAW_API void Draw_Apply_Rect(Draw* draw, DrawCmd_Rect* cmd);

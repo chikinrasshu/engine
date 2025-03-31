@@ -2,4 +2,4 @@ CompileFlags:
     CompilationDatabase: ./builddir/
 Diagnostics:
     UnusedIncludes: Strict
-    MissingIncludes: Strict
+    

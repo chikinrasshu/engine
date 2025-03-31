@@ -3,61 +3,60 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-static s32 chkWindowCount = 0;
+static S32 Window_Count = 0;
 
-CHK_WINDOW_LOCAL b32 chkWindowPush(void) {
-  if (chkWindowCount == 0 && !glfwInit()) return false;
-  ++chkWindowCount;
+WINDOW_LOCAL B32 Window_Push(void) {
+  if (Window_Count == 0 && !glfwInit()) return false;
+  ++Window_Count;
   return true;
 }
 
-CHK_WINDOW_LOCAL b32 chkWindowPop(void) {
-  if (chkWindowCount == 1) { glfwTerminate(); }
-  --chkWindowCount;
+WINDOW_LOCAL B32 Window_Pop(void) {
+  if (Window_Count == 1) { glfwTerminate(); }
+  --Window_Count;
   return true;
 }
 
-CHK_WINDOW_LOCAL void chkWindowCbOnFrame(GLFWwindow* handle);
-CHK_WINDOW_LOCAL void chkWindowCbOnPos(GLFWwindow* handle, s32 x, s32 y);
-CHK_WINDOW_LOCAL void chkWindowCbOnSize(GLFWwindow* handle, s32 w, s32 h);
-CHK_WINDOW_LOCAL void chkWindowCbOnFbSize(GLFWwindow* handle, s32 w, s32 h);
-CHK_WINDOW_LOCAL void chkWindowCbOnDpi(GLFWwindow* handle, s32 x, s32 y);
+WINDOW_LOCAL void WindowCb_OnFrame(GLFWwindow* handle);
+WINDOW_LOCAL void WindowCb_OnPos(GLFWwindow* handle, S32 x, S32 y);
+WINDOW_LOCAL void WindowCb_OnSize(GLFWwindow* handle, S32 w, S32 h);
+WINDOW_LOCAL void WindowCb_OnFbSize(GLFWwindow* handle, S32 w, S32 h);
+WINDOW_LOCAL void WindowCb_OnDpi(GLFWwindow* handle, F32 x, F32 y);
 
-CHK_WINDOW_LOCAL b32 chkWindowBindCallbacks(ChkWindow* window) {
+WINDOW_LOCAL B32 Window_BindCallbacks(Window* window) {
   GLFWwindow* handle = window->handle;
 
   glfwSetWindowUserPointer(handle, window);
-  glfwSetWindowRefreshCallback(handle, chkWindowCbOnFrame);
-  glfwSetWindowPosCallback(handle, chkWindowCbOnPos);
-  glfwSetWindowSizeCallback(handle, chkWindowCbOnSize);
-  glfwSetFramebufferSizeCallback(handle, chkWindowCbOnFbSize);
-  glfwSetWindowContentScaleCallback(handle, chkWindowCbOnDpi);
+  glfwSetWindowRefreshCallback(handle, WindowCb_OnFrame);
+  glfwSetWindowPosCallback(handle, WindowCb_OnPos);
+  glfwSetWindowSizeCallback(handle, WindowCb_OnSize);
+  glfwSetFramebufferSizeCallback(handle, WindowCb_OnFbSize);
+  glfwSetWindowContentScaleCallback(handle, WindowCb_OnDpi);
 
   return true;
 }
 
-CHK_WINDOW_LOCAL b32 chkWindowGetDefaults(ChkWindow* window) {
+WINDOW_LOCAL B32 Window_GetDefaults(Window* window) {
   GLFWwindow* handle = window->handle;
 
-  s32 tmp_a, tmp_b;
-  f32 tmp_c, tmp_d;
+  S32 tmp_a, tmp_b;
+  F32 tmp_c, tmp_d;
 
   glfwGetWindowPos(handle, &tmp_a, &tmp_b);
-  window->x = (f32)tmp_a, window->y = (f32)tmp_b;
+  window->x = (F32)tmp_a, window->y = (F32)tmp_b;
   glfwGetWindowSize(handle, &tmp_a, &tmp_b);
-  window->w = (f32)tmp_a, window->h = (f32)tmp_b;
+  window->w = (F32)tmp_a, window->h = (F32)tmp_b;
   glfwGetFramebufferSize(handle, &tmp_a, &tmp_b);
-  window->fb_x = (f32)0, window->fb_y = (f32)0;
-  window->fb_w = (f32)tmp_a, window->fb_h = (f32)tmp_b;
+  window->fb_x = (F32)0, window->fb_y = (F32)0;
+  window->fb_w = (F32)tmp_a, window->fb_h = (F32)tmp_b;
   glfwGetWindowContentScale(handle, &tmp_c, &tmp_d);
-  window->dpi_x = (f32)tmp_c, window->dpi_y = (f32)tmp_d;
+  window->dpi_x = (F32)tmp_c, window->dpi_y = (F32)tmp_d;
 
   return true;
 }
 
-CHK_WINDOW_API b32 chkWindowCreate(ChkWindow* window, s32 w, s32 h,
-                                   cstr caption) {
-  if (!chkWindowPush()) return false;
+WINDOW_API B32 Window_Create(Window* window, S32 w, S32 h, CStr caption) {
+  if (!Window_Push()) return false;
 
   glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
@@ -72,31 +71,31 @@ CHK_WINDOW_API b32 chkWindowCreate(ChkWindow* window, s32 w, s32 h,
   glfwMakeContextCurrent(handle);
 
   window->handle = handle;
-  chkWindowBindCallbacks(window);
-  chkWindowGetDefaults(window);
+  Window_BindCallbacks(window);
+  Window_GetDefaults(window);
 
   return true;
 }
 
-CHK_WINDOW_API b32 chkWindowDestroy(ChkWindow* window) {
+WINDOW_API B32 Window_Destroy(Window* window) {
   glfwDestroyWindow(window->handle);
 
-  if (!chkWindowPop()) return false;
+  if (!Window_Pop()) return false;
   return true;
 }
 
-CHK_WINDOW_API s32 chkWindowStep(ChkWindow* window, s32 poll_events) {
+WINDOW_API S32 Window_Step(Window* window, S32 poll_events) {
   if (poll_events) glfwPollEvents();
   if (glfwWindowShouldClose(window->handle)) return 0;
 
   if (window->onFrame) window->onFrame(window->userData);
 
   glfwSwapBuffers(window->handle);
-  window->ct = (f32)glfwGetTime();
+  window->ct = (F32)glfwGetTime();
   if (window->ct >= 120.0f) {
     window->ct -= 60.0f;
     window->lt -= 60.0f;
-    glfwSetTime((f64)window->ct);
+    glfwSetTime((F64)window->ct);
   }
 
   window->dt = window->ct - window->lt;
@@ -105,17 +104,17 @@ CHK_WINDOW_API s32 chkWindowStep(ChkWindow* window, s32 poll_events) {
   return 0;
 }
 
-CHK_WINDOW_API s32 chkWindowRun(ChkWindow* window) {
-  s32 exitCode = 1;
+WINDOW_API S32 Window_Run(Window* window) {
+  S32 exitCode = 1;
 
   glfwShowWindow(window->handle);
   while (!glfwWindowShouldClose(window->handle))
-    exitCode = chkWindowStep(window, true);
+    exitCode = Window_Step(window, true);
 
   return exitCode;
 }
 
-CHK_WINDOW_API b32 chkWindowSetUserData(ChkWindow* window, void* ptr) {
+WINDOW_API B32 Window_SetUserData(Window* window, void* ptr) {
   if (!window) return false;
 
   window->userData = ptr;
@@ -123,7 +122,7 @@ CHK_WINDOW_API b32 chkWindowSetUserData(ChkWindow* window, void* ptr) {
   return true;
 }
 
-CHK_WINDOW_API b32 chkWindowSetOnFrame(ChkWindow* window, ChkCallback* fn) {
+WINDOW_API B32 Window_SetOnFrame(Window* window, Callback* fn) {
   if (!window) return false;
 
   window->onFrame = fn;
@@ -133,27 +132,27 @@ CHK_WINDOW_API b32 chkWindowSetOnFrame(ChkWindow* window, ChkCallback* fn) {
 
 // Callbacks
 
-CHK_WINDOW_LOCAL void chkWindowCbOnFrame(GLFWwindow* handle) {
-  ChkWindow* window = glfwGetWindowUserPointer(handle);
-  chkWindowStep(window, false);
+WINDOW_LOCAL void WindowCb_OnFrame(GLFWwindow* handle) {
+  Window* window = glfwGetWindowUserPointer(handle);
+  Window_Step(window, false);
 }
 
-CHK_WINDOW_LOCAL void chkWindowCbOnPos(GLFWwindow* handle, s32 x, s32 y) {
-  ChkWindow* window = glfwGetWindowUserPointer(handle);
-  window->x = (f32)x, window->y = (f32)y;
+WINDOW_LOCAL void WindowCb_OnPos(GLFWwindow* handle, S32 x, S32 y) {
+  Window* window = glfwGetWindowUserPointer(handle);
+  window->x = (F32)x, window->y = (F32)y;
 }
 
-CHK_WINDOW_LOCAL void chkWindowCbOnSize(GLFWwindow* handle, s32 w, s32 h) {
-  ChkWindow* window = glfwGetWindowUserPointer(handle);
-  window->w = (f32)w, window->h = (f32)h;
+WINDOW_LOCAL void WindowCb_OnSize(GLFWwindow* handle, S32 w, S32 h) {
+  Window* window = glfwGetWindowUserPointer(handle);
+  window->w = (F32)w, window->h = (F32)h;
 }
 
-CHK_WINDOW_LOCAL void chkWindowCbOnFbSize(GLFWwindow* handle, s32 w, s32 h) {
-  ChkWindow* window = glfwGetWindowUserPointer(handle);
-  window->fb_w = (f32)w, window->fb_h = (f32)h;
+WINDOW_LOCAL void WindowCb_OnFbSize(GLFWwindow* handle, S32 w, S32 h) {
+  Window* window = glfwGetWindowUserPointer(handle);
+  window->fb_w = (F32)w, window->fb_h = (F32)h;
 }
 
-CHK_WINDOW_LOCAL void chkWindowCbOnDpi(GLFWwindow* handle, s32 x, s32 y) {
-  ChkWindow* window = glfwGetWindowUserPointer(handle);
-  window->dpi_x = (f32)x, window->dpi_y = (f32)y;
+WINDOW_LOCAL void WindowCb_OnDpi(GLFWwindow* handle, F32 x, F32 y) {
+  Window* window = glfwGetWindowUserPointer(handle);
+  window->dpi_x = (F32)x, window->dpi_y = (F32)y;
 }

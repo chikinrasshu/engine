@@ -4,52 +4,55 @@
 #include <chk/draw/draw.h>
 #include <chk/window/window.h>
 
-typedef struct ChkEngine {
+typedef struct Engine {
   int32_t exitCode;
 
-  // ChkMemory     memory;
-  ChkCode   code;
-  ChkDraw   draw;
-  ChkWindow window;
-} ChkEngine;
+  // Memory     memory;
+  Code   code;
+  Draw   draw;
+  Window window;
+} Engine;
 
 void onFrame(void* userPtr) {
-  ChkEngine* engine = userPtr;
+  Engine* engine = userPtr;
   if (!engine) return;
 
-  ChkCode*   code   = &engine->code;
-  ChkDraw*   draw   = &engine->draw;
-  ChkWindow* window = &engine->window;
+  Code*   code   = &engine->code;
+  Draw*   draw   = &engine->draw;
+  Window* window = &engine->window;
 
   // Do something...
-  b32 reloaded = chkCodeRefresh(code);
+  B32 reloaded = Code_Refresh(code);
   (void)reloaded;
 
-  chkDrawBeginFrame(draw);
+  F32 ww = window->fb_w;
+  F32 wh = window->fb_h;
 
-  chkDrawViewport(draw, 0, 0, window->fb_w, window->fb_h);
-  chkDrawClear(draw, 0.1f, 0.2f, 0.3f);
+  Draw_BeginFrame(draw);
 
-  chkDrawEndFrame(draw);
+  Draw_PushViewport(draw, (DrawCmd_Viewport){.w = ww, .h = wh});
+  Draw_PushClear(draw, (DrawCmd_Clear){.r = 0.1f, .g = 0.2f, .b = 0.3f});
+
+  Draw_EndFrame(draw);
 }
 
 int32_t main() {
-  ChkEngine engine = {0};
-  engine.exitCode  = 1;
+  Engine engine   = {0};
+  engine.exitCode = 1;
 
-  if (chkCodeCreate(&engine.code, "plugins/base/menu")) {
-    if (chkWindowCreate(&engine.window, 800, 600, "chk_engine")) {
-      if (chkDrawCreate(&engine.draw)) {
-        chkWindowSetUserData(&engine.window, &engine);
-        chkWindowSetOnFrame(&engine.window, onFrame);
+  if (Code_Create(&engine.code, "plugins/base/menu")) {
+    if (Window_Create(&engine.window, 800, 600, "chk_engine")) {
+      if (Draw_Create(&engine.draw)) {
+        Window_SetUserData(&engine.window, &engine);
+        Window_SetOnFrame(&engine.window, onFrame);
 
-        engine.exitCode = chkWindowRun(&engine.window);
+        engine.exitCode = Window_Run(&engine.window);
 
-        chkDrawDestroy(&engine.draw);
+        Draw_Destroy(&engine.draw);
       }
-      chkWindowDestroy(&engine.window);
+      Window_Destroy(&engine.window);
     }
-    chkCodeDestroy(&engine.code);
+    Code_Destroy(&engine.code);
   }
 
   return engine.exitCode;

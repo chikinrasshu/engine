@@ -2,14 +2,14 @@
 
 #include <epoxy/gl.h>
 
-CHK_DRAW_API b32 chkDrawCreate(ChkDraw* draw) {
+DRAW_API B32 Draw_Create(Draw* draw) {
   // TODO(chk): create me?
   draw->_unused = 420;
 
   return true;
 }
 
-CHK_DRAW_API b32 chkDrawDestroy(ChkDraw* draw) {
+DRAW_API B32 Draw_Destroy(Draw* draw) {
   // TODO(chk): delete me?
 
   return true;
@@ -17,27 +17,12 @@ CHK_DRAW_API b32 chkDrawDestroy(ChkDraw* draw) {
 
 // Frame commands
 
-CHK_DRAW_API b32 chkDrawBeginFrame(ChkDraw* draw) {
+DRAW_API B32 Draw_BeginFrame(Draw* draw) {
   // TODO(chk): implement the command list!
   return true;
 }
 
-CHK_DRAW_API b32 chkDrawEndFrame(ChkDraw* draw) {
+DRAW_API B32 Draw_EndFrame(Draw* draw) {
   // TODO(chk): implement the command list!
-  return true;
-}
-
-// Draw commands
-
-CHK_DRAW_API b32 chkDrawViewport(ChkDraw* draw, f32 x, f32 y, f32 w, f32 h) {
-  // TODO(chk): implement the command list!
-  glViewport((GLint)x, (GLint)y, (GLsizei)w, (GLsizei)h);
-  return true;
-}
-
-CHK_DRAW_API b32 chkDrawClear(ChkDraw* draw, f32 r, f32 g, f32 b) {
-  // TODO(chk): implement the command list!
-  glClearColor(r, g, b, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
   return true;
 }

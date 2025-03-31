@@ -1,9 +1,9 @@
 #pragma once
 
-#define chkSizeOf(n)  sizeof(n)
-#define chkCountOf(n) (chkSizeOf(n) / chkSizeOf((n)[0]))
+#define SizeOf(n)  sizeof(n)
+#define CountOf(n) (SizeOf(n) / SizeOf((n)[0]))
 
-#define chkKB(n) (1024ULL * (n))
-#define chkMB(n) (1024ULL * chkKB(n))
-#define chkGB(n) (1024ULL * chkMB(n))
-#define chkTB(n) (1024ULL * chkGB(n))
+#define KiloBytes(n) (1024ULL * (n))
+#define MegaBytes(n) (1024ULL * KiloBytes(n))
+#define GigaBytes(n) (1024ULL * MegaBytes(n))
+#define TeraBytes(n) (1024ULL * GigaBytes(n))
